@@ -1,9 +1,29 @@
-# Virtual environment
+# Environment
+.env
 venv/
-
-# Python cache files
 __pycache__/
 *.pyc
+*.pyo
 
-# Environment variables / secrets
-.env
+# Logs
+logs/
+*.log
+
+# Conversations
+conversations/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Whisper models cache
+*.pt
+
+# Audio temp files
+*.wav
+*.mp3
+!static/*.mp3

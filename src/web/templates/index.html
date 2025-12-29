@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova - Voice Assistant Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">🎙️</span>
+                <span class="logo-text">Nova</span>
+            </div>
+            
+            <nav class="nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <span class="nav-icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item" data-section="conversations">
+                    <span class="nav-icon">💬</span>
+                    Conversations
+                </a>
+                <a href="#" class="nav-item" data-section="settings">
+                    <span class="nav-icon">⚙️</span>
+                    Settings
+                </a>
+                <a href="#" class="nav-item" data-section="voices">
+                    <span class="nav-icon">🗣️</span>
+                    Voices
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span id="status-text">Ready</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <header class="section-header">
+                    <h1>Dashboard</h1>
+                    <p>Voice Assistant Control Center</p>
+                </header>
+
+                <div class="cards">
+                    <div class="card">
+                        <div class="card-icon">🎤</div>
+                        <div class="card-content">
+                            <h3>Wake Word</h3>
+                            <p id="wake-word">{{ config.assistant.wake_word if config.assistant else 'hey nova' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon">🧠</div>
+                        <div class="card-content">
+                            <h3>Model</h3>
+                            <p id="model-name">{{ config.openai.model if config.openai else 'gpt-4o-mini' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon">🔊</div>
+                        <div class="card-content">
+                            <h3>Voice</h3>
+                            <p id="voice-name">{{ config.tts.voice_en if config.tts else 'AriaNeural' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-icon">💾</div>
+                        <div class="card-content">
+                            <h3>Sessions</h3>
+                            <p id="session-count">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Assistant -->
+                <div class="live-section">
+                    <h2>Live Assistant</h2>
+                    <div class="assistant-box">
+                        <div class="visualizer" id="visualizer">
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                        </div>
+                        <p id="assistant-status">Press the button to start</p>
+                        <button class="btn-primary" id="start-btn">
+                            <span>🎤</span> Start Listening
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Conversation -->
+                <div class="recent-section">
+                    <h2>Recent Messages</h2>
+                    <div class="messages" id="messages">
+                        <div class="message assistant">
+                            <span class="avatar">🤖</span>
+                            <div class="bubble">Hello! I'm Nova. How can I help you today?</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conversations Section -->
+            <section id="conversations" class="section">
+                <header class="section-header">
+                    <h1>Conversations</h1>
+                    <p>View and manage saved conversations</p>
+                </header>
+                
+                <div class="conversations-list" id="conversations-list">
+                    <p class="empty-state">Loading conversations...</p>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="section">
+                <header class="section-header">
+                    <h1>Settings</h1>
+                    <p>Configure your assistant</p>
+                </header>
+                
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label>Assistant Name</label>
+                        <input type="text" id="setting-name" value="Nova">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>System Prompt</label>
+                        <textarea id="setting-prompt" rows="4">You are Nova, a helpful voice assistant...</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Language Model</label>
+                        <select id="setting-model">
+                            <option value="gpt-4o-mini">GPT-4o Mini</option>
+                            <option value="gpt-4o">GPT-4o</option>
+                            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Whisper Model</label>
+                        <select id="setting-whisper">
+                            <option value="tiny">Tiny (fastest)</option>
+                            <option value="base" selected>Base (recommended)</option>
+                            <option value="small">Small</option>
+                            <option value="medium">Medium</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn-primary" id="save-settings">Save Settings</button>
+                </div>
+            </section>
+
+            <!-- Voices Section -->
+            <section id="voices" class="section">
+                <header class="section-header">
+                    <h1>Voices</h1>
+                    <p>Choose and preview TTS voices</p>
+                </header>
+                
+                <div class="voices-grid" id="voices-grid">
+                    <p class="empty-state">Loading voices...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

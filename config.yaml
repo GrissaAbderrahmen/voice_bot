@@ -1,0 +1,49 @@
+# Voice Assistant Configuration
+# Edit this file to customize your assistant
+
+assistant:
+  name: "Nova"
+  wake_word: "hey nova"
+  languages: ["en", "fr"]  # English and French
+
+whisper:
+  model: "base"  # Options: tiny, base, small, medium (larger = slower but more accurate)
+  device: "cpu"  # Use "cuda" if you have NVIDIA GPU
+
+tts:
+  engine: "edge"
+  voice_en: "en-US-AriaNeural"  # English voice
+  voice_fr: "fr-FR-DeniseNeural"  # French voice
+  rate: "+0%"  # Speed adjustment: -50% to +50%
+
+openai:
+  model: "gpt-4o-mini"
+  max_tokens: 500
+  temperature: 0.7
+
+audio:
+  sample_rate: 16000
+  channels: 1
+  silence_duration: 1.5  # Seconds of silence to stop recording
+  energy_threshold: 300
+
+conversation:
+  max_history: 20
+  persist: true
+  persist_path: "./conversations/"
+
+system_prompt: |
+  You are Nova, a helpful and friendly voice assistant.
+  Keep your responses concise and conversational - remember this is spoken out loud.
+  Match the user's language: if they speak French, respond in French.
+  If they speak English, respond in English.
+  Be helpful, warm, and natural.
+
+web:
+  host: "127.0.0.1"
+  port: 5000
+  debug: false
+
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "./logs/assistant.log"
